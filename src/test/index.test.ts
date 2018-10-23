@@ -22,14 +22,17 @@ describe('Typegoose', () => {
     const car = await Car.create({
       model: 'Tesla',
       price: mongoose.Types.Decimal128.fromString('50123.25'),
+      age: 15,
     });
 
     const [trabant, zastava] = await Car.create([{
       model: 'Trabant',
       price: mongoose.Types.Decimal128.fromString('28189.25'),
+      age: 20,
     }, {
       model: 'Zastava',
-        price: mongoose.Types.Decimal128.fromString('1234.25'),
+      price: mongoose.Types.Decimal128.fromString('1234.25'),
+      age: 20,
     }]);
 
     const user = await User.create({
@@ -61,7 +64,7 @@ describe('Typegoose', () => {
     {
       const foundUser = await User
         .findById(user.id)
-        .populate('car previousCars')
+        .populate('car previousCars cars')
         .exec();
 
       expect(foundUser).to.have.property('nick', 'Nothing');
@@ -84,6 +87,9 @@ describe('Typegoose', () => {
       expect(foundUser.job.jobType).to.have.property('salery').to.be.a('number');
       expect(foundUser.car).to.have.property('model', 'Tesla');
       expect(foundUser).to.have.property('previousJobs').to.have.length(2);
+
+      expect(foundUser).to.have.property('cars').to.have.length(2);
+      expect(foundUser.cars.map((i) => i._id.toString())).to.include(trabant.id).to.include(zastava.id);
 
       expect(foundUser).to.have.property('fullName', 'John Doe');
 

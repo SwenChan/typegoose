@@ -210,3 +210,25 @@ export const arrayProp = (options: ArrayPropOptions) => (target: any, key: strin
 };
 
 export type Ref<T> = T | ObjectID;
+
+export interface VirtualTyptOptions {
+  ref: string | object;
+  localField: string;
+  foreignField: string;
+  justOne?: boolean;
+  getters?: boolean;
+}
+
+export const virtualProp = (options: VirtualTyptOptions) => (target: any, key: string) => {
+  const Type = (Reflect as any).getMetadata('design:type', target, key);
+  if (!Type) {
+    throw new NoMetadataError(key);
+  }
+  const name = target.constructor.name;
+  if (!_.has(virtuals, `${name}.${key}`)) {
+    _.set(virtuals, `${name}.${key}`, {});
+  }
+  const { ref, localField, foreignField, justOne = false, getters = false } = options;
+  virtuals[name][key] = { ref, localField, foreignField, justOne, getters };
+  return;
+};
