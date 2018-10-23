@@ -18,7 +18,6 @@ import {
   instanceMethod,
   post,
   plugin,
-  virtualProp,
 } from '../../typegoose';
 
 export interface FindOrCreateResult<T> {
@@ -43,9 +42,6 @@ export class User extends Typegoose {
     this.firstName = split[0];
     this.lastName = split[1];
   }
-
-  @virtualProp({ref: 'Car', localField: 'age', foreignField: 'age', justOne: false, getters: false})
-  cars: InstanceType<Car>[];
 
   @prop({ default: 'Nothing' })
   nick?: string;

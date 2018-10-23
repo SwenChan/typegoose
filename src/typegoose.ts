@@ -110,9 +110,6 @@ export class Typegoose {
       if (value.set) {
         sch.virtual(key).set(value.set);
       }
-      if (value.ref) {
-        sch.virtual(key, value);
-      }
     });
 
     const indices = Reflect.getMetadata('typegoose:indices', t) || [];
